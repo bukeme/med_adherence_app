@@ -105,7 +105,7 @@ class PasswordResetAPIView(generics.GenericAPIView):
 		return Response({
 			'message': 'OTP has been sent to your email',
 			'status': status.HTTP_200_OK
-		})
+		}, status=status.HTTP_200_OK)
 
 password_reset = PasswordResetAPIView.as_view()
 
@@ -125,11 +125,11 @@ class ValidatePasswordResetOTPAPIView(generics.GenericAPIView):
 			return Response({
 				'message': 'OTP is valid',
 				'status': status.HTTP_200_OK
-			})
+			}, status=status.HTTP_200_OK)
 		return Response({
 			'error': 'Invalid OTP',
 			'status':status.HTTP_400_BAD_REQUEST
-		})
+		}, status=status.HTTP_400_BAD_REQUEST)
 
 validate_password_reset_otp = ValidatePasswordResetOTPAPIView.as_view()
 
@@ -160,10 +160,10 @@ class ConfirmPasswordResetAPIView(generics.GenericAPIView):
 			return Response({
 				'error': 'password_1 not same as password_2',
 				'status':status.HTTP_400_BAD_REQUEST
-			})
+			}, status=status.HTTP_400_BAD_REQUEST)
 		return Response({
 			'error': 'Invalid OTP',
 			'status':status.HTTP_400_BAD_REQUEST
-		})
+		}, status=status.HTTP_400_BAD_REQUEST)
 
 confirm_password_reset = ConfirmPasswordResetAPIView.as_view()
