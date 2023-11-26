@@ -29,11 +29,11 @@ class RegisterMedicationAPIView(generics.GenericAPIView):
 		num_of_dose = serializer.validated_data.get('num_of_dose')
 		set_times = serializer.validated_data.get('set_times')
 
-		if num_of_dose != len(set_times):
-			return Response({
-				'error': 'Number of set times is not equal to number of doses',
-				'status': status.HTTP_400_BAD_REQUEST
-			}, status=status.HTTP_400_BAD_REQUEST)
+		# if num_of_dose != len(set_times):
+		# 	return Response({
+		# 		'error': 'Number of set times is not equal to number of doses',
+		# 		'status': status.HTTP_400_BAD_REQUEST
+		# 	}, status=status.HTTP_400_BAD_REQUEST)
 
 		medication = Medication.objects.create(
 			patient=patient,
