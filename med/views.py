@@ -9,6 +9,7 @@ from .serializers import (
 	MedicationDoseSerializer
 )
 from .models import Medication, MedicationDose
+from .permissions import IsAccountOrAdminReadOnly, IsMedAccountOrAdminReadOnly, IsMedDoseAccountOrAdminReadOnly
 
 User = get_user_model()
 
@@ -57,14 +58,14 @@ register_medication = RegisterMedicationAPIView.as_view()
 class PatientMedicationReportAPIView(generics.RetrieveAPIView):
 	queryset = User.objects.all()
 	serializer_class = PatientMedicationReportSerializer
-	permission_classes = [permissions.IsAuthenticated]
+	permission_classes = [permissions.IsAuthenticated, IsAccountOrAdminReadOnly]
 
 patient_medication_report = PatientMedicationReportAPIView.as_view()
 
 class MedicationRetrieveUpdateDestroyAPIView(viewsets.ModelViewSet):
 	queryset = Medication.objects.all()
 	serializer_class = MedicationReportSerializer
-	permission_classes = [permissions.IsAuthenticated]
+	permission_classes = [permissions.IsAuthenticated, IsMedAccountOrAdminReadOnly]
 
 medication_retrieve = MedicationRetrieveUpdateDestroyAPIView.as_view({'get': 'retrieve'})
 medication_update = MedicationRetrieveUpdateDestroyAPIView.as_view({'patch': 'partial_update'})

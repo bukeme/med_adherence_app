@@ -12,7 +12,7 @@ from .serializers import (
 	RegisterDoctorSerializer
 )
 
-from .permissions import IsAccountOwner
+from .permissions import IsAccountOwner, IsAdmin
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import update_session_auth_hash
@@ -187,3 +187,25 @@ class ConfirmPasswordResetAPIView(generics.GenericAPIView):
 		}, status=status.HTTP_400_BAD_REQUEST)
 
 confirm_password_reset = ConfirmPasswordResetAPIView.as_view()
+
+class PatientSearchAPIView(generics.ListAPIView):
+	serializer_class = UserSerializer
+	permission_classes = [IsAdmin]
+
+	def get_queryset(self):
+		name = self.kwargs.get('name', '')
+		queryset = User.objects.filter(admin=False, full_name__icontains=name)
+		return queryset
+
+patient_search = PatientSearchAPIView.as_view()
+
+class DoctorSearchAPIView(generics.ListAPIView):
+	serializer_class = UserSerializer
+	permission_classes = [IsAuthenticated]
+
+	def get_queryset(self):
+		name = self.kwargs.get('name', '')
+		queryset = User.objects.filter(admin=True, full_name__icontains=name)
+		return queryset
+
+doctor_search = DoctorSearchAPIView.as_view()

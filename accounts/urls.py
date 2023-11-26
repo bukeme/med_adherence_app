@@ -14,4 +14,6 @@ urlpatterns = [
 	path('validate-password-reset-otp/', views.validate_password_reset_otp, name='validate_password_reset_otp'),
 	path('confirm-password-reset/', views.confirm_password_reset, name='confirm_password_reset'),
 	path('doctor-register/', views.doctor_register, name='doctor_register'),
+	path('patient-search/<str:name>/', views.patient_search, name='patient_search'),
+	path('doctor-search/<str:name>/', views.doctor_search, name='doctor_search'),
 ]

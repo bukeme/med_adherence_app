@@ -10,3 +10,7 @@ class IsAccountOwner(BasePermission):
 		if request.method in ['PUT', 'DELETE']:
 			return obj == request.user
 		return True
+
+class IsAdmin(BasePermission):
+	def has_object_permission(self, request, view, obj):
+		return request.user.admin
