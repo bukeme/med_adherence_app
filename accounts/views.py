@@ -8,7 +8,8 @@ from .serializers import (
 	ChangePasswordSerializer,
 	ResetPasswordEmailSerializer,
 	ValidateResetPasswordSerializer,
-	ConfirmPasswordResetSerializer
+	ConfirmPasswordResetSerializer,
+	RegisterDoctorSerializer
 )
 
 from .permissions import IsAccountOwner
@@ -41,6 +42,25 @@ class UserCreateAPIView(generics.CreateAPIView):
 
 user_create = UserCreateAPIView.as_view()
 
+class DoctorRegisterAPIView(generics.GenericAPIView):
+	serializer_class = RegisterDoctorSerializer
+	permission_classes = [AllowAny]
+
+	def post(self, request, *args, **kwargs):
+		serializer = self.get_serializer(data=request.data)
+		serializer.is_valid(raise_exception=True)
+		user = User.objects.create_superuser(**serializer.validated_data)
+		refresh = RefreshToken.for_user(user)
+		return Response({
+			'user': UserSerializer(user).data,
+			'token': {
+				'refresh': str(refresh),
+				'access': str(refresh.access_token),
+			}
+		})
+
+doctor_register = DoctorRegisterAPIView.as_view()
+
 class UserViewSet(viewsets.ModelViewSet):
 	queryset = User.objects.all()
 	serializer_class = UserSerializer
@@ -48,7 +68,7 @@ class UserViewSet(viewsets.ModelViewSet):
 	
 user_list_viewset = UserViewSet.as_view({'get': 'list'})
 user_detail_viewset = UserViewSet.as_view({'get': 'retrieve'})
-user_update_viewset = UserViewSet.as_view({'put': 'update'})
+user_update_viewset = UserViewSet.as_view({'patch': 'partial_update'})
 
 class UserDetailAPIView(APIView):
 	permission_classes = [IsAuthenticated]

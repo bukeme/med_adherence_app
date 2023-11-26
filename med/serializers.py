@@ -41,8 +41,13 @@ class PatientMedicationReportSerializer(serializers.ModelSerializer):
 	medications = serializers.SerializerMethodField(read_only=True)
 	class Meta:
 		model = User
-		fields = ['pk', 'full_name', 'email', 'medications']
+		fields = ['pk', 'full_name', 'phone', 'email', 'medications']
 
 	def get_medications(self, obj):
 		qs = Medication.objects.filter(patient=obj)
 		return SubMedicationReportSerializer(qs, many=True, context=self.context).data
+
+class MedicationDoseSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = MedicationDose
+		fields = ['pk', 'medication', 'set_time', 'taken_at', 'taken']

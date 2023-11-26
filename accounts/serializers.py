@@ -7,10 +7,11 @@ User = get_user_model()
 class RegisterUserSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = User
-		fields = ['pk', 'full_name', 'email', 'password']
+		fields = ['pk', 'full_name', 'phone', 'email', 'password', 'admin']
 		extra_kwargs = {
 			'password': {'write_only': True},
 			'pk': {'read_only': True},
+			'admin': {'read_only': True}
 		}
 
 	def create(self, validated_data):
@@ -25,8 +26,8 @@ class RegisterUserSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = User
-		fields = ['pk', 'full_name', 'email']
-		extra_kwargs = {'pk': {'read_only': True}}
+		fields = ['pk', 'full_name', 'phone', 'email', 'admin']
+		extra_kwargs = {'pk': {'read_only': True}, 'admin': {'read_only': True}}
 
 
 class ChangePasswordSerializer(serializers.Serializer):
@@ -45,3 +46,14 @@ class ConfirmPasswordResetSerializer(serializers.Serializer):
 	otp = serializers.CharField()
 	password_1 = serializers.CharField()
 	password_2 = serializers.CharField()
+
+
+class RegisterDoctorSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = User
+		fields = ['pk', 'full_name', 'phone', 'email', 'password', 'admin']
+		extra_kwargs = {
+			'password': {'write_only': True},
+			'pk': {'read_only': True},
+			'admin': {'read_only': True},
+		}

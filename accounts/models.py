@@ -5,7 +5,7 @@ from django.utils import timezone
 # Create your models here.
 
 class UserManager(BaseUserManager):
-	def create_user(self, full_name, email, password=None):
+	def create_user(self, full_name, email, password, phone=None):
 		if not email:
 			raise ValueError('User must have an email address')
 
@@ -13,26 +13,29 @@ class UserManager(BaseUserManager):
 
 		user = self.model(
 			full_name=full_name,
+			phone=phone,
 			email=email,
 		)
 		user.set_password(password)
 		user.save(using=self._db)
 		return user
 
-	def create_staffuser(self, full_name, email, password):
+	def create_staffuser(self, full_name, email, password, phone=None):
 		user = self.create_user(
 			full_name=full_name,
 			email=email,
+			phone=phone,
 			password=password
 		)
 		user.staff = True
 		user.save(using=self._db)
 		return user
 
-	def create_superuser(self, full_name, email, password):
+	def create_superuser(self, full_name, email, password, phone=None):
 		user = self.create_user(
 			full_name=full_name,
 			email=email,
+			phone=phone,
 			password=password
 		)
 		user.staff = True
@@ -47,7 +50,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 		unique=True
 	)
 	full_name = models.CharField(max_length=250)
-	otp = models.CharField(max_length=50, null=True)
+	phone = models.CharField(max_length=50, null=True, blank=True)
+	otp = models.CharField(max_length=50, null=True, blank=True)
 	is_active = models.BooleanField(default=True)
 	staff = models.BooleanField(default=False)
 	admin = models.BooleanField(default=False)
